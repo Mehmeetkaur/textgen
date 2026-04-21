@@ -1,0 +1,24 @@
+[project]
+name = "textgen"
+version = "0.1.0"
+description = "Starter code for loading and visualizing document datasets"
+readme = "README.md"
+requires-python = "==3.11.12"
+dependencies = [
+    "atria>=0.0.9",
+    "atriaml",
+    "pillow",
+    "numpy",
+    "torch",
+]
+
+[tool.uv.sources]
+atriaml = { git = "https://github.com/atriaml/atria" }
+
+[tool.uv]
+managed = true
+package = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
