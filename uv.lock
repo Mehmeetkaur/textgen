@@ -2472,6 +2472,7 @@ dependencies = [
     { name = "numpy" },
     { name = "pillow" },
     { name = "torch" },
+    { name = "tuna" },
 ]
 
 [package.metadata]
@@ -2481,6 +2482,7 @@ requires-dist = [
     { name = "numpy" },
     { name = "pillow" },
     { name = "torch" },
+    { name = "tuna", specifier = ">=0.5.13" },
 ]
 
 [[package]]
@@ -2643,6 +2645,15 @@ dependencies = [
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/5c/c1/54fffb2eb13d293d9a429fead3646752ea190de0229bcf3d591ba2481263/triton-2.1.0-0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:919b06453f0033ea52c13eaf7833de0e57db3178d23d4e04f9fc71c4f2c32bf8", size = 89234153, upload-time = "2023-09-01T07:26:20.161Z" },
+]
+
+[[package]]
+name = "tuna"
+version = "0.5.13"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d4/36/fe000c9d092f83c3092241f264957ff8b2777c91cdf9077fd3716b6385a4/tuna-0.5.13.tar.gz", hash = "sha256:2d2e69992d2030097be550a662815cad150218e7a42b732d37e27de4d745939c", size = 162159, upload-time = "2026-04-12T08:43:09.578Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4f/e2/7bbdeeba940960fc97470ca8cda5112d72663d581345112a4502e9edd5f4/tuna-0.5.13-py3-none-any.whl", hash = "sha256:4220198306c8dc0ca5884b9dd42d2df881189f2b44f35aea9725f4f5f7bcea77", size = 160225, upload-time = "2026-04-12T08:43:07.913Z" },
 ]
 
 [[package]]

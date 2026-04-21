@@ -10,6 +10,7 @@ dependencies = [
     "pillow",
     "numpy",
     "torch",
+    "tuna>=0.5.13",
 ]
 
 [tool.uv.sources]

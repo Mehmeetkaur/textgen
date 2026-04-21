@@ -1,21 +1,20 @@
+from __future__ import annotations
+
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import fire
 from atria_datasets import Dataset
-from atria_datasets.registry.document_classification.rvlcdip import *  # noqa
-from atria_datasets.registry.document_classification.tobacco3482 import *  # noqa
-from atria_datasets.registry.ser.cord import *  # noqa
-from atria_datasets.registry.ser.funsd import *  # noqa
-from atria_datasets.registry.ser.sroie import *  # noqa
-from atria_datasets.registry.ser.wild_receipts import *  # noqa
-from atria_logger import get_logger
-from atria_transforms.core import DataTransform
-from atria_types import DocumentInstance
-from numpy import test
-from torch.utils.data import DataLoader, Dataset as TorchDataset
 from atria_datasets.core.dataset._exceptions import SplitNotFoundError
-from textgen.transforms import TransformV1  # noqa: F401
+from atria_datasets.registry.ser.funsd import *  # noqa
+from atria_logger import get_logger
+from atria_types import DocumentInstance
+from pydantic import BaseModel
+
+from textgen.transforms import TransformV1
+
+if TYPE_CHECKING:
+    from torch.utils.data import DataLoader
 
 logger = get_logger(__name__)
 
@@ -27,8 +26,8 @@ def load_dataset(
     access_token: str | None = None,
     overwrite_existing_cached: bool = False,
     num_processes: int = 0,
-    train_transform: DataTransform[Any] | None = None,
-    eval_transform: DataTransform[Any] | None = None,
+    train_transform: BaseModel | None = None,
+    eval_transform: BaseModel | None = None,
 ) -> Dataset:
     from atria_datasets import load_dataset_config
 
@@ -52,24 +51,28 @@ def load_dataset(
     try:
         dataset.train.output_transform = train_transform
     except SplitNotFoundError:
-        logger.warning("Train split not found in dataset, skipping train transform assignment.")
+        logger.warning(
+            "Train split not found in dataset, skipping train transform assignment."
+        )
 
     try:
         dataset.validation.output_transform = eval_transform
     except SplitNotFoundError:
-        logger.warning("Validation split not found in dataset, skipping validation transform assignment.")
+        logger.warning(
+            "Validation split not found in dataset, skipping validation transform assignment."
+        )
 
     try:
         dataset.test.output_transform = eval_transform
     except SplitNotFoundError:
-        logger.warning("Test split not found in dataset, skipping test transform assignment.")
+        logger.warning(
+            "Test split not found in dataset, skipping test transform assignment."
+        )
     return dataset
 
 
-def load_transform(train: bool = True) -> DataTransform[DocumentInstance]:
-    from atria_transforms import load_transform as atria_load_transform
-
-    transform = atria_load_transform("transform_v1", train=train)
+def load_transform(train: bool = True) -> TransformV1:
+    transform = TransformV1(train=train)
     logger.info(f"Loaded transform: {transform}")
     return transform
 
@@ -79,6 +82,8 @@ def build_dataloader(
     batch_size: int,
     shuffle: bool = False,
 ) -> DataLoader:
+    from torch.utils.data import DataLoader
+
     return DataLoader(
         dataset_split,
         batch_size=batch_size,
@@ -115,28 +120,21 @@ def iterate_dataset(
     for sample_index, sample in enumerate(dataset.train):
         logger.info("Sample %s in train split: %s", sample_index, sample)
         sample: DocumentInstance
-        sample.viz.visualize(output_path / 'train' / f"sample_{sample_index}.png")
+        sample.viz.visualize(output_path / "train" / f"sample_{sample_index}.png")
         break
 
     # visualize first sample in the test dataset
     for sample_index, sample in enumerate(dataset.test):
         logger.info("Sample %s in test split: %s", sample_index, sample)
         sample: DocumentInstance
-        sample.viz.visualize(output_path / 'test' / f"sample_{sample_index}.png")
+        sample.viz.visualize(output_path / "test" / f"sample_{sample_index}.png")
         break
 
-    train_dataloader = DataLoader(
-        dataset.train,
-        batch_size=batch_size,
-        shuffle=shuffle,
-        collate_fn=lambda x: x,
+    train_dataloader = build_dataloader(
+        dataset.train, batch_size=batch_size, shuffle=True
     )
-
-    test_dataloader = DataLoader(
-        dataset.test,
-        batch_size=batch_size,
-        shuffle=shuffle,
-        collate_fn=lambda x: x,
+    test_dataloader = build_dataloader(
+        dataset.test, batch_size=batch_size, shuffle=False
     )
 
     for batch_index, batch in enumerate(train_dataloader):
