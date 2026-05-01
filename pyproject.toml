@@ -5,16 +5,15 @@ description = "Starter code for loading and visualizing document datasets"
 readme = "README.md"
 requires-python = "==3.11.12"
 dependencies = [
-    "atria>=0.0.9",
-    "atriaml",
     "pillow",
     "numpy",
     "torch",
     "tuna>=0.5.13",
+    "atria-datasets",
 ]
 
 [tool.uv.sources]
-atriaml = { git = "https://github.com/atriaml/atria" }
+atria-datasets = { path = "../atria/atria_datasets" }
 
 [tool.uv]
 managed = true

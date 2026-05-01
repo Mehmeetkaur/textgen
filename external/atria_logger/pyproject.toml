@@ -1,0 +1,61 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "atria_logger"
+version = "0.1.8"
+description = "A lightweight and flexible logging library for Python applications."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE.txt" }
+authors = [{ name = "Saifullah", email = "saifullah.saifullah@dfki.de" }]
+dependencies = [
+    "coloredlogs>=15.0.1",
+    "lazy_loader>=0.4",
+    "rich>=14.0.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest", "coverage"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.ruff]
+target-version = "py311"
+extend-exclude = ["alembic"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "C4", "UP"]
+ignore = [
+    "E501",  # line too long, handled by formatter
+    "D100", "D104",  # docstring warnings
+]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+addopts = "-rXs --strict-config --strict-markers --tb=short --import-mode=importlib"
+
+[project.urls]
+Homepage = "https://github.com/saifullah3396/atria_logger/"
+Source = "https://github.com/saifullah3396/atria_logger/"
+BugReports = "https://github.com/saifullah3396/atria_logger/"
+
+[tool.mypy]
+ignore_missing_imports = true
+strict = true
+disallow_untyped_defs = true
+check_untyped_defs = true
+warn_unused_ignores = true
+
+[dependency-groups]
+dev = [
+    "coverage>=7.12.0",
+    "pytest>=9.0.1",
+    "ruff>=0.14.6",
+    "mypy>=1.18.2",
+]
