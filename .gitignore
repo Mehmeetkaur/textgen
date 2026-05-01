@@ -8,4 +8,5 @@ wheels/
 
 # Virtual environments
 .venv
-output/
+output
+datasets

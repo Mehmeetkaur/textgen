@@ -114,7 +114,7 @@ wheels = [
 [[package]]
 name = "atria-datasets"
 version = "0.0.0"
-source = { directory = "../atria/atria_datasets" }
+source = { directory = "external/atria_datasets" }
 dependencies = [
     { name = "atria-logger" },
     { name = "atria-registry" },
@@ -153,9 +153,9 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "atria-logger", editable = "../atria/atria_logger" },
-    { name = "atria-registry", editable = "../atria/atria_registry" },
-    { name = "atria-types", editable = "../atria/atria_types" },
+    { name = "atria-logger", editable = "external/atria_logger" },
+    { name = "atria-registry", editable = "external/atria_registry" },
+    { name = "atria-types", editable = "external/atria_types" },
     { name = "boto3", specifier = ">=1.39.4" },
     { name = "coverage", marker = "extra == 'test'" },
     { name = "datadings", git = "https://github.com/saifullah3396/datadings.git" },
@@ -204,7 +204,7 @@ dev = [
 [[package]]
 name = "atria-logger"
 version = "0.1.8"
-source = { editable = "../atria/atria_logger" }
+source = { editable = "external/atria_logger" }
 dependencies = [
     { name = "coloredlogs" },
     { name = "lazy-loader" },
@@ -232,7 +232,7 @@ dev = [
 [[package]]
 name = "atria-registry"
 version = "0.0.0"
-source = { editable = "../atria/atria_registry" }
+source = { editable = "external/atria_registry" }
 dependencies = [
     { name = "hydra-core" },
     { name = "hydra-zen" },
@@ -250,7 +250,7 @@ provides-extras = ["test"]
 [[package]]
 name = "atria-types"
 version = "0.0.0"
-source = { editable = "../atria/atria_types" }
+source = { editable = "external/atria_types" }
 dependencies = [
     { name = "atria-logger" },
     { name = "beautifulsoup4" },
@@ -275,7 +275,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "atria-logger", editable = "../atria/atria_logger" },
+    { name = "atria-logger", editable = "external/atria_logger" },
     { name = "beautifulsoup4", specifier = ">=4.12.2" },
     { name = "codename", specifier = ">=1.1" },
     { name = "coverage", marker = "extra == 'test'" },
@@ -2024,7 +2024,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "atria-datasets", directory = "../atria/atria_datasets" },
+    { name = "atria-datasets", directory = "external/atria_datasets" },
     { name = "numpy" },
     { name = "pillow" },
     { name = "torch" },

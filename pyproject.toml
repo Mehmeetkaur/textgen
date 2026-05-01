@@ -13,7 +13,7 @@ dependencies = [
 ]
 
 [tool.uv.sources]
-atria-datasets = { path = "../atria/atria_datasets" }
+atria-datasets = { path = "./external/atria_datasets" }
 
 [tool.uv]
 managed = true
