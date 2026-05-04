@@ -1,5 +1,11 @@
 from __future__ import annotations
 
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath("external"))
+sys.path.insert(0, os.path.abspath("src"))
+
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -10,8 +16,8 @@ from atria_datasets.registry.ser.funsd import *  # noqa
 from atria_logger import get_logger
 from atria_types import DocumentInstance
 from pydantic import BaseModel
-
 from textgen.transforms import TransformV1
+
 
 if TYPE_CHECKING:
     from torch.utils.data import DataLoader
@@ -38,8 +44,10 @@ def load_dataset(
         max_validation_samples=max_samples,
     )
     logger.info(f"Loaded dataset config:\n{dataset_config}")
+
     if data_dir is not None:
         data_dir += "/" + name.split("/")[0]
+
     dataset = dataset_config.build(
         data_dir=data_dir,
         access_token=access_token,
@@ -48,6 +56,7 @@ def load_dataset(
         enable_cached_splits=True,
         max_cache_image_size=1024,
     )
+
     try:
         dataset.train.output_transform = train_transform
     except SplitNotFoundError:
@@ -63,11 +72,12 @@ def load_dataset(
         )
 
     try:
-        dataset.test.output_transform = eval_transform
+        dataset.test.output_transform = TransformV1(train=False)
     except SplitNotFoundError:
         logger.warning(
             "Test split not found in dataset, skipping test transform assignment."
         )
+
     return dataset
 
 
@@ -118,16 +128,43 @@ def iterate_dataset(
 
     # visualize first sample in the train dataset
     for sample_index, sample in enumerate(dataset.train):
-        logger.info("Sample %s in train split: %s", sample_index, sample)
-        sample: DocumentInstance
-        sample.viz.visualize(output_path / "train" / f"sample_{sample_index}.png")
+        logger.info(
+        "TRAIN_SAMPLE | idx=%d | text=%s | keys=%s",
+        sample_index,
+        sample["text"],
+        list(sample.keys())
+        )
+
+        image = sample["image"]
+        mask = sample["mask"]
+
+        assert image.size == (256, 256), f"Bad image size: {image.size}"
+        assert mask.size == (256, 256), f"Bad mask size: {mask.size}"
+
+        image.save(output_path / "train" / f"image_{sample_index}.png")
+        mask.save(output_path / "train" / f"mask_{sample_index}.png")
+
         break
 
-    # visualize first sample in the test dataset
     for sample_index, sample in enumerate(dataset.test):
-        logger.info("Sample %s in test split: %s", sample_index, sample)
-        sample: DocumentInstance
-        sample.viz.visualize(output_path / "test" / f"sample_{sample_index}.png")
+        logger.info(
+        "TEST_SAMPLE | idx=%d | keys=%s",
+        sample_index,
+        list(sample.keys()) if isinstance(sample, dict) else type(sample)
+        )
+
+        if isinstance(sample, dict):
+           image = sample["image"]
+           mask = sample["mask"]
+
+           image.save(output_path / "test" / f"image_{sample_index}.png")
+           mask.save(output_path / "test" / f"mask_{sample_index}.png")
+
+        else:
+
+            if hasattr(sample, "viz"):
+               sample.viz.visualize(output_path / "test" / f"sample_{sample_index}.png")
+
         break
 
     train_dataloader = build_dataloader(
@@ -138,12 +175,16 @@ def iterate_dataset(
     )
 
     for batch_index, batch in enumerate(train_dataloader):
-        logger.info("Processing batch %s with %s samples", batch_index, len(batch))
+        logger.info(
+            "Processing batch %s with %s samples", batch_index, len(batch)
+        )
         logger.info("Sample 1 in batch: %s", batch[0])
         break
 
     for batch_index, batch in enumerate(test_dataloader):
-        logger.info("Processing batch %s with %s samples", batch_index, len(batch))
+        logger.info(
+            "Processing batch %s with %s samples", batch_index, len(batch)
+        )
         logger.info("Sample 1 in batch: %s", batch[0])
         break
 
