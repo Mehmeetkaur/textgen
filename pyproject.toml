@@ -10,10 +10,16 @@ dependencies = [
     "torch",
     "tuna>=0.5.13",
     "atria-datasets",
+    "atria-registry",
+    "atria-logger",
+    "atria-types",
 ]
 
 [tool.uv.sources]
-atria-datasets = { path = "./external/atria_datasets" }
+atria-datasets   = { path = "./external/atria_datasets",  editable = true }
+atria-registry   = { path = "./external/atria_registry",  editable = true }
+atria-logger     = { path = "./external/atria_logger",    editable = true }
+atria-types      = { path = "./external/atria_types",     editable = true }
 
 [tool.uv]
 managed = true
@@ -21,4 +27,3 @@ package = true
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
